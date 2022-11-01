@@ -11,4 +11,4 @@ package:
 version:
 	@echo "1.0.0"
 
-all: build package
+all: build

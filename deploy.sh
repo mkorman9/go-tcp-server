@@ -6,6 +6,7 @@ DEB_FILE="go-tcp-server_1.0.0_all.deb"
 REMOTE_HOST="localhost"
 REMOTE_USER="root"
 REMOTE_DEB_PATH="."
+SUDO=""
 
 SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR"
 
@@ -47,9 +48,13 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$REMOTE_USER" != "root" ]]; then
+  SUDO="sudo "
+fi
+
 echo "Checking remote host..." && \
   ssh ${SSH_OPTS} "${REMOTE_USER}@${REMOTE_HOST}" -C "uname -a" && \
   echo "Uploading package..." && \
   scp ${SSH_OPTS} "${DEB_FILE}" "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DEB_PATH}" && \
   echo "Starting installation..." && \
-  ssh ${SSH_OPTS} "${REMOTE_USER}@${REMOTE_HOST}" -C "dpkg -i ${REMOTE_DEB_PATH}/${DEB_FILE}"
+  ssh ${SSH_OPTS} "${REMOTE_USER}@${REMOTE_HOST}" -C "${SUDO}dpkg -i ${REMOTE_DEB_PATH}/${DEB_FILE}"
