@@ -2,6 +2,10 @@
 
 set -e
 
+if [[ ! -f "/etc/go-tcp-server/config.yml" ]]; then
+  cp "/etc/go-tcp-server/config.example.yml" "/etc/go-tcp-server/config.yml"
+fi
+
 systemctl daemon-reload && \
     systemctl start go-tcp-server && \
     systemctl enable go-tcp-server
