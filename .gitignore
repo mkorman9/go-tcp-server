@@ -2,4 +2,4 @@
 .idea/
 /go-tcp-server
 /go-tcp-server.exe
-/go-tcp-server_1.0_all.deb
+/go-tcp-server_*_all.deb

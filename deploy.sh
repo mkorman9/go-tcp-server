@@ -2,7 +2,7 @@
 
 set -e
 
-DEB_FILE="go-tcp-server_1.0_all.deb"
+DEB_FILE="go-tcp-server_1.0.0_all.deb"
 REMOTE_HOST="localhost"
 REMOTE_USER="root"
 REMOTE_DEB_PATH="."
@@ -35,7 +35,7 @@ while [[ $# -gt 0 ]]; do
       echo "Unknown option $1"
       echo "usage: ./deploy.sh [OPTIONS]"
       echo "OPTIONS:"
-      echo "  --file / -f <name of .deb file to deploy> (default: go-tcp-server_1.0_all.deb)"
+      echo "  --file / -f <name of .deb file to deploy> (default: go-tcp-server_1.0.0_all.deb)"
       echo "  --host / -h <remote host to deploy to> (default: localhost)"
       echo "  --user / -u <remote user to log in to> (default: root)"
       echo "  --path / -p <path on a remote host to upload .deb file> (default: .)"
