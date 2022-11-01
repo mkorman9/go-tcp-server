@@ -7,7 +7,7 @@ SCRIPTPATH="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P)"
 BUILD_PATH="${BUILD_PATH:-/tmp/go-tcp-server}"
 BIN_PATH="${BIN_PATH:-${SCRIPTPATH}/../go-tcp-server}"
 VERSION="${VERSION:-1.0.0}"
-OUT_PATH="go-tcp-server_${VERSION}_all.deb"
+OUT_PATH="go-tcp-server_${VERSION}_amd64.deb"
 
 rm -rf "$BUILD_PATH" || true
 cp -a "${SCRIPTPATH}/go-tcp-server" "$BUILD_PATH"
