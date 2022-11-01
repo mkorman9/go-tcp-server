@@ -5,7 +5,7 @@ OUTPUT ?= go-tcp-server
 build:
 	CGO_ENABLED=0 go build -o $(OUTPUT)
 
-test:
-	go test -v ./...
+package:
+	.package/build.sh
 
-all: build test
+all: build package

@@ -1,0 +1,5 @@
+Package: go-tcp-server
+Version: 1.0
+Architecture: all
+Maintainer: Me <me@example.com>
+Description: TCP server written in Go.

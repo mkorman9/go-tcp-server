@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$1" == "install" ]]; then
+    useradd --system go-tcp-server || true
+fi

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -e
+
+systemctl daemon-reload && \
+    systemctl start go-tcp-server && \
+    systemctl enable go-tcp-server
