@@ -1,15 +1,26 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"github.com/mkorman9/go-commons/configutil"
 	"github.com/mkorman9/go-commons/coreutil"
 	"github.com/mkorman9/go-commons/logutil"
 	"github.com/mkorman9/go-commons/tcputil"
 	"github.com/rs/zerolog/log"
+	"os"
 )
 
 func main() {
-	c := configutil.LoadFromEnv()
+	configFilePath := flag.String("config", "./config.yml", "path to config.yml file")
+	flag.Parse()
+
+	c, err := configutil.LoadConfigFromFile(*configFilePath)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Failed to load configuration file: %v\n", err)
+		os.Exit(1)
+	}
+
 	logutil.SetupLogger(c)
 
 	server := tcputil.NewServer(c)

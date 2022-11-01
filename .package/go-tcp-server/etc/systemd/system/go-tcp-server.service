@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 Type=simple
 User=go-tcp-server
-ExecStart=/usr/local/bin/go-tcp-server
+ExecStart=/usr/local/bin/go-tcp-server --config /etc/go-tcp-server/config.yml
 TimeoutSec=10
 Restart=on-failure
 RestartSec=30

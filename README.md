@@ -34,3 +34,12 @@ systemctl status go-tcp-server
 ```bash
 journalctl -u go-tcp-server
 ```
+
+### Change configuration
+```bash
+vi /etc/go-tcp-server/config.yml
+
+# apply changes
+
+systemctl restart go-tcp-server
+```
