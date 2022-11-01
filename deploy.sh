@@ -53,6 +53,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ ! -f "$DEB_FILE" ]]; then
+  echo "DEB file couldn't be found: ${DEB_FILE}"
+  exit 1
+fi
+
 if [[ "$REMOTE_USER" != "root" ]]; then
   SUDO="sudo "
 fi
