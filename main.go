@@ -25,7 +25,7 @@ func main() {
 
 	server := tcputil.NewServer(c)
 	server.ForkingStrategy(tcputil.WorkerPool(
-		newConnectionHandler(),
+		tcputil.PacketFraming(8196, tcputil.SplitBySeparator([]byte{'\n'}), newConnectionHandler()),
 		8,
 		1024,
 		10*time.Millisecond,
