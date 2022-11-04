@@ -8,13 +8,13 @@ import (
 )
 
 type connectionHandler struct {
-	readBuffers      map[*tcputil.ClientSocket]*bytes.Buffer
+	readBuffers      map[*tcputil.ClientSocket][]byte
 	readBuffersMutex sync.Mutex
 }
 
 func newConnectionHandler() *connectionHandler {
 	return &connectionHandler{
-		readBuffers: map[*tcputil.ClientSocket]*bytes.Buffer{},
+		readBuffers: map[*tcputil.ClientSocket][]byte{},
 	}
 }
 
@@ -31,26 +31,24 @@ func (c *connectionHandler) OnAccept(socket *tcputil.ClientSocket) {
 
 	c.readBuffersMutex.Lock()
 	defer c.readBuffersMutex.Unlock()
-	c.readBuffers[socket] = bytes.NewBuffer(nil)
+	c.readBuffers[socket] = make([]byte, 0)
 }
 
 func (c *connectionHandler) OnRead(socket *tcputil.ClientSocket, data []byte) {
-	readBuffer := c.readBuffers[socket]
-	_, _ = readBuffer.Write(data)
-	b := readBuffer.Bytes()
+	b := c.readBuffers[socket]
+	b = append(b, data...)
 
 	for {
-		index := bytes.Index(b, []byte{'\n'})
-		if index == -1 {
+		packetData, other, ok := bytes.Cut(b, []byte{'\n'})
+		if !ok {
 			break
 		}
 
-		packetData := b[:index]
 		c.onPacket(socket, packetData)
-
-		b = b[index+1:]
-		c.readBuffers[socket] = bytes.NewBuffer(b)
+		b = other
 	}
+
+	c.readBuffers[socket] = b
 }
 
 func (c *connectionHandler) onPacket(socket *tcputil.ClientSocket, packetData []byte) {
