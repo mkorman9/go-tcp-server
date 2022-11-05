@@ -139,7 +139,7 @@ func main() {
 	fmt.Printf("  success:\t%d\n", successCount)
 	fmt.Printf("  total:\t%v\n", totalTime)
 	fmt.Printf("  average:\t%v\n", metrics.avgLatency)
-	fmt.Printf("  throughput:\t%v\n", formatThroughput(float64(*clients**payloadSize*2)/totalTime.Seconds()))
+	fmt.Printf("  throughput:\t%v\n", formatThroughput(float64(*clients**payloadSize**sends*2)/totalTime.Seconds()))
 	fmt.Printf("  maximum:\t%v\n", metrics.maxLatency)
 	fmt.Printf("  minimum:\t%v\n", metrics.minLatency)
 
