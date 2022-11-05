@@ -3,5 +3,5 @@
 set -e
 
 if [[ "$1" == "install" ]]; then
-    useradd --system go-tcp-server || true
+  useradd --system go-tcp-server || true
 fi
