@@ -5,14 +5,10 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type connectionHandler struct {
+type packetHandler struct {
 }
 
-func newConnectionHandler() *connectionHandler {
-	return &connectionHandler{}
-}
-
-func (c *connectionHandler) OnAccept(socket *tcputil.ClientSocket) {
+func (p *packetHandler) OnAccept(socket *tcputil.ClientSocket) {
 	log.Info().Msgf("Client connected from: %s", socket.RemoteAddress())
 
 	socket.OnClose(func() {
@@ -20,7 +16,7 @@ func (c *connectionHandler) OnAccept(socket *tcputil.ClientSocket) {
 	})
 }
 
-func (c *connectionHandler) OnPacket(socket *tcputil.ClientSocket, packetData []byte) {
+func (p *packetHandler) OnPacket(socket *tcputil.ClientSocket, packetData []byte) {
 	log.Info().Msgf("Received: %s", string(packetData))
 
 	_, err := socket.Write(packetData)
