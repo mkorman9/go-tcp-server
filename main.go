@@ -35,9 +35,11 @@ func main() {
 	//	100*time.Millisecond,
 	//))
 	server.ForkingStrategy(tcputil.GoroutinePerConnection(
-		tcputil.ReadPoolAdapter(
-			tcputil.PacketFraming(8192, tcputil.SplitBySeparator([]byte{'\n'}), &packetHandler{}),
+		tcputil.FramingHandler(
 			1024,
+			8192,
+			tcputil.SplitBySeparator([]byte{'\n'}),
+			&packetHandler{},
 		),
 	))
 

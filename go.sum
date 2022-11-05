@@ -45,8 +45,8 @@ github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7/go.mod h1:ZX
 github.com/mitchellh/mapstructure v1.4.3/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyuac5Z2hdY=
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
-github.com/mkorman9/go-commons v1.1.43 h1:9E1H0+DJroJJ1ilAFTe4frlfk5lpTWJqJcHroSwmekA=
-github.com/mkorman9/go-commons v1.1.43/go.mod h1:hQXvaAALfIWBhDH4/OzkcseveoFjZopESKTIALm5Q2A=
+github.com/mkorman9/go-commons v1.1.44 h1:vs/4+M3wKT/OTzDz/CcMzfCSZ5BczYBDztSMTCmBNNU=
+github.com/mkorman9/go-commons v1.1.44/go.mod h1:hQXvaAALfIWBhDH4/OzkcseveoFjZopESKTIALm5Q2A=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
