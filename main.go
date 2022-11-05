@@ -8,6 +8,7 @@ import (
 	"github.com/mkorman9/go-commons/logutil"
 	"github.com/mkorman9/go-commons/tcputil"
 	"github.com/rs/zerolog/log"
+	"io"
 	"os"
 )
 
@@ -28,20 +29,29 @@ func main() {
 	log.Info().Msgf("Version: %s", AppVersion)
 
 	server := tcputil.NewServer(c)
-	//server.ForkingStrategy(tcputil.ReadPool(
-	//	tcputil.PacketFraming(8192, tcputil.SplitBySeparator([]byte{'\n'}), &packetHandler{}),
-	//	1,
-	//	1024,
-	//	100*time.Millisecond,
-	//))
 	server.ForkingStrategy(tcputil.GoroutinePerConnection(
 		tcputil.FramingHandler(
+			tcputil.SplitBySeparator([]byte{'\n'}),
 			1024,
 			8192,
-			tcputil.SplitBySeparator([]byte{'\n'}),
-			&packetHandler{},
+			serve,
 		),
 	))
 
 	coreutil.StartAndBlock(server)
+}
+
+func serve(p tcputil.PacketReader) {
+	socket := p.Socket()
+
+	p.OnPacket(func(packet io.Reader) {
+		_, err := io.Copy(socket, packet)
+		if err != nil {
+			if socket.IsClosed() {
+				return
+			}
+
+			log.Error().Err(err).Msg("Error while writing to client socket")
+		}
+	})
 }
