@@ -3,7 +3,7 @@ OUTPUT ?= go-tcp-server
 .DEFAULT_GOAL := all
 
 build:
-	CGO_ENABLED=0 go build -o $(OUTPUT)
+	CGO_ENABLED=0 go build -ldflags "-X main.AppVersion=$(shell make version)" -o $(OUTPUT)
 
 package:
 	VERSION=$(shell make version) .package/build.sh

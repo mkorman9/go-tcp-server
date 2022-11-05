@@ -7,9 +7,12 @@ import (
 	"github.com/mkorman9/go-commons/coreutil"
 	"github.com/mkorman9/go-commons/logutil"
 	"github.com/mkorman9/go-commons/tcputil"
+	"github.com/rs/zerolog/log"
 	"os"
 	"time"
 )
+
+var AppVersion = "development"
 
 func main() {
 	configFilePath := flag.String("config", "./config.yml", "path to config.yml file")
@@ -22,6 +25,8 @@ func main() {
 	}
 
 	logutil.SetupLogger(c)
+
+	log.Info().Msgf("Version: %s", AppVersion)
 
 	server := tcputil.NewServer(c)
 	server.ForkingStrategy(tcputil.WorkerPool(
