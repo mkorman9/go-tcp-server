@@ -9,7 +9,6 @@ import (
 	"github.com/mkorman9/go-commons/tcputil"
 	"github.com/rs/zerolog/log"
 	"os"
-	"time"
 )
 
 var AppVersion = "development"
@@ -29,13 +28,18 @@ func main() {
 	log.Info().Msgf("Version: %s", AppVersion)
 
 	server := tcputil.NewServer(c)
-	server.ForkingStrategy(tcputil.WorkerPool(
-		tcputil.PacketFraming(8192, tcputil.SplitBySeparator([]byte{'\n'}), &packetHandler{}),
-		1,
-		1024,
-		100*time.Millisecond,
+	//server.ForkingStrategy(tcputil.ReadPool(
+	//	tcputil.PacketFraming(8192, tcputil.SplitBySeparator([]byte{'\n'}), &packetHandler{}),
+	//	1,
+	//	1024,
+	//	100*time.Millisecond,
+	//))
+	server.ForkingStrategy(tcputil.GoroutinePerConnection(
+		tcputil.ReadPoolAdapter(
+			tcputil.PacketFraming(8192, tcputil.SplitBySeparator([]byte{'\n'}), &packetHandler{}),
+			1024,
+		),
 	))
-	//server.ForkingStrategy(tcputil.GoroutinePerConnection(serve))
 
 	coreutil.StartAndBlock(server)
 }
