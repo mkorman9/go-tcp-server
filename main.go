@@ -31,10 +31,11 @@ func main() {
 	server := tcputil.NewServer(c)
 	server.ForkingStrategy(tcputil.WorkerPool(
 		tcputil.PacketFraming(8192, tcputil.SplitBySeparator([]byte{'\n'}), &packetHandler{}),
-		4,
+		1,
 		1024,
-		10*time.Millisecond,
+		100*time.Millisecond,
 	))
+	//server.ForkingStrategy(tcputil.GoroutinePerConnection(serve))
 
 	coreutil.StartAndBlock(server)
 }
