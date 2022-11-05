@@ -17,8 +17,6 @@ func (p *packetHandler) OnAccept(socket *tcputil.ClientSocket) {
 }
 
 func (p *packetHandler) OnPacket(socket *tcputil.ClientSocket, packetData []byte) {
-	log.Info().Msgf("Received: %s", string(packetData))
-
 	_, err := socket.Write(packetData)
 	if err != nil {
 		if socket.IsClosed() {
