@@ -9,10 +9,10 @@ type packetHandler struct {
 }
 
 func (p *packetHandler) OnAccept(socket *tcputil.ClientSocket) {
-	log.Info().Msgf("Client connected from: %s", socket.RemoteAddress())
+	//log.Info().Msgf("Client connected from: %s", socket.RemoteAddress())
 
 	socket.OnClose(func() {
-		log.Info().Msgf("Client disconnected: %s", socket.RemoteAddress())
+		//log.Info().Msgf("Client disconnected: %s", socket.RemoteAddress())
 	})
 }
 

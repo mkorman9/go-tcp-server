@@ -46,7 +46,7 @@ func formatThroughput(value float64) throughput {
 	}
 
 	return throughput{
-		value: value,
+		value: value * 8,
 		unit:  unit,
 	}
 }
