@@ -3,7 +3,7 @@ module github.com/mkorman9/go-tcp-server
 go 1.19
 
 require (
-	github.com/mkorman9/go-commons v1.1.46
+	github.com/mkorman9/go-commons v1.1.47
 	github.com/rs/zerolog v1.26.1
 )
 

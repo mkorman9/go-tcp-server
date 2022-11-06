@@ -23,11 +23,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	logutil.SetupLogger(c)
+	logutil.SetupLogger(
+		logutil.Level(c.String("log.level", "info")),
+	)
 
 	log.Info().Msgf("Version: %s", AppVersion)
 
-	server := tcputil.NewServer(c)
+	server := tcputil.NewServer(
+		tcputil.Address(c.String("tcp.address", "0.0.0.0:7000")),
+	)
 	server.ForkingStrategy(tcputil.GoroutinePerConnection(
 		tcputil.PacketFramingHandler(
 			tcputil.SplitBySeparator([]byte{'\n'}),
