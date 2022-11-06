@@ -8,7 +8,6 @@ import (
 	"github.com/mkorman9/go-commons/logutil"
 	"github.com/mkorman9/go-commons/tcputil"
 	"github.com/rs/zerolog/log"
-	"io"
 	"os"
 )
 
@@ -30,7 +29,7 @@ func main() {
 
 	server := tcputil.NewServer(c)
 	server.ForkingStrategy(tcputil.GoroutinePerConnection(
-		tcputil.FramingHandler(
+		tcputil.PacketFramingHandler(
 			tcputil.SplitBySeparator([]byte{'\n'}),
 			1024,
 			8192,
@@ -41,11 +40,11 @@ func main() {
 	coreutil.StartAndBlock(server)
 }
 
-func serve(p tcputil.PacketReader) {
-	socket := p.Socket()
+func serve(ctx tcputil.PacketFramingContext) {
+	socket := ctx.Socket()
 
-	p.OnPacket(func(packet io.Reader) {
-		_, err := io.Copy(socket, packet)
+	ctx.OnPacket(func(packet []byte) {
+		_, err := socket.Write(packet)
 		if err != nil {
 			if socket.IsClosed() {
 				return
