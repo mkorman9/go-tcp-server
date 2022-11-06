@@ -1,6 +1,6 @@
 OUTPUT ?= go-tcp-server
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := compile
 
 compile:
 	CGO_ENABLED=0 go build -ldflags "-X main.AppVersion=$(shell make version)" -o $(OUTPUT)
@@ -11,4 +11,4 @@ package:
 version:
 	@echo "1.0.0"
 
-all: compile
+all: compile package
