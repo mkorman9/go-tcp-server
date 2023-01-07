@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/mkorman9/go-commons/configutil"
-	"github.com/mkorman9/go-commons/coreutil"
-	"github.com/mkorman9/go-commons/logutil"
-	"github.com/mkorman9/go-commons/tcputil"
+	"github.com/gookit/config/v2"
+	"github.com/mkorman9/tiny"
+	"github.com/mkorman9/tiny/tinylog"
+	"github.com/mkorman9/tiny/tinytcp"
 	"github.com/rs/zerolog/log"
 	"os"
 )
@@ -17,34 +17,33 @@ func main() {
 	configFilePath := flag.String("config", "./config.yml", "path to config.yml file")
 	flag.Parse()
 
-	c, err := configutil.LoadConfigFromFile(*configFilePath)
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "Failed to load configuration file: %v\n", err)
+	if loaded := tiny.LoadConfig(*configFilePath); !loaded {
+		_, _ = fmt.Fprintf(os.Stderr, "Failed to load configuration file\n")
 		os.Exit(1)
 	}
 
-	logutil.SetupLogger(
-		logutil.Level(c.String("log.level", "info")),
+	tinylog.SetupLogger(
+		tinylog.Level(config.String("log.level", "info")),
 	)
 
 	log.Info().Msgf("Version: %s", AppVersion)
 
-	server := tcputil.NewServer(
-		tcputil.Address(c.String("tcp.address", "0.0.0.0:7000")),
+	server := tinytcp.NewServer(
+		config.String("tcp.address", "0.0.0.0:7000"),
 	)
-	server.ForkingStrategy(tcputil.GoroutinePerConnection(
-		tcputil.PacketFramingHandler(
-			tcputil.SplitBySeparator([]byte{'\n'}),
+	server.ForkingStrategy(tinytcp.GoroutinePerConnection(
+		tinytcp.PacketFramingHandler(
+			tinytcp.SplitBySeparator([]byte{'\n'}),
 			1024,
 			8192,
 			serve,
 		),
 	))
 
-	coreutil.StartAndBlock(server)
+	tiny.StartAndBlock(server)
 }
 
-func serve(ctx tcputil.PacketFramingContext) {
+func serve(ctx tinytcp.PacketFramingContext) {
 	socket := ctx.Socket()
 
 	ctx.OnPacket(func(packet []byte) {

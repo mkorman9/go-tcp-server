@@ -5,7 +5,7 @@ import (
 	"crypto/rand"
 	"flag"
 	"fmt"
-	"github.com/mkorman9/go-commons/tcputil"
+	"github.com/mkorman9/tiny/tinytcp"
 	"math"
 	"sync"
 	"sync/atomic"
@@ -86,7 +86,7 @@ func main() {
 				waitGroup.Done()
 			}()
 
-			client, err := tcputil.Dial(fmt.Sprintf("%s:%d", *host, *port))
+			client, err := tinytcp.Dial(fmt.Sprintf("%s:%d", *host, *port))
 			if err != nil {
 				atomic.AddUint32(&connectionErrors, 1)
 				return
@@ -106,7 +106,7 @@ func main() {
 				writeElapsed := afterWrite.Sub(beforeWrite)
 
 				var receivedPayload []byte
-				receivedPayload, err = tcputil.ReadBytes(client, *payloadSize)
+				receivedPayload, err = tinytcp.ReadBytes(client, *payloadSize)
 				if err != nil {
 					atomic.AddUint32(&readErrors, 1)
 					continue
