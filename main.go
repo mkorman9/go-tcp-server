@@ -34,8 +34,6 @@ func main() {
 	server.ForkingStrategy(tinytcp.GoroutinePerConnection(
 		tinytcp.PacketFramingHandler(
 			tinytcp.SplitBySeparator([]byte{'\n'}),
-			1024,
-			8192,
 			serve,
 		),
 	))
