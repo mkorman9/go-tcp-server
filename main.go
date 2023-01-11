@@ -41,7 +41,7 @@ func main() {
 	tiny.StartAndBlock(server)
 }
 
-func serve(ctx tinytcp.PacketFramingContext) {
+func serve(ctx *tinytcp.PacketFramingContext) {
 	socket := ctx.Socket()
 
 	ctx.OnPacket(func(packet []byte) {
