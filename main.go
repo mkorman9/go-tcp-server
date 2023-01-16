@@ -41,10 +41,10 @@ func main() {
 	tiny.StartAndBlock(server)
 }
 
-func serve(ctx *tinytcp.PacketFramingContext) {
-	socket := ctx.Socket()
+func serve(socket *tinytcp.ConnectedSocket) tinytcp.PacketHandler {
+	// client connected
 
-	ctx.OnPacket(func(packet []byte) {
+	return func(packet []byte) {
 		_, err := socket.Write(packet)
 		if err != nil {
 			if socket.IsClosed() {
@@ -53,5 +53,5 @@ func serve(ctx *tinytcp.PacketFramingContext) {
 
 			log.Error().Err(err).Msg("Error while writing to client socket")
 		}
-	})
+	}
 }
