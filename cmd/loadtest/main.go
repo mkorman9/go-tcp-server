@@ -13,10 +13,11 @@ import (
 )
 
 type testMetrics struct {
-	minLatency time.Duration
-	maxLatency time.Duration
-	avgLatency time.Duration
-	samples    int64
+	maxLatency   time.Duration
+	avgLatency   time.Duration
+	samples      int64
+	bytesRead    int64
+	bytesWritten int64
 }
 
 func main() {
@@ -37,7 +38,6 @@ func main() {
 
 	var metricsMutex sync.Mutex
 	metrics := testMetrics{
-		minLatency: math.MaxInt64,
 		maxLatency: math.MinInt64,
 		avgLatency: 0,
 	}
@@ -63,7 +63,11 @@ func main() {
 
 	for i := 0; i < *clients; i++ {
 		go func() {
-			var latencies []time.Duration
+			var (
+				latencies    []time.Duration
+				bytesRead    int
+				bytesWritten int
+			)
 
 			defer func() {
 				metricsMutex.Lock()
@@ -76,10 +80,11 @@ func main() {
 
 					if latency > metrics.maxLatency {
 						metrics.maxLatency = latency
-					} else if latency < metrics.minLatency {
-						metrics.minLatency = latency
 					}
 				}
+
+				metrics.bytesRead += int64(bytesRead)
+				metrics.bytesWritten += int64(bytesWritten)
 
 				metricsMutex.Unlock()
 
@@ -95,12 +100,12 @@ func main() {
 			for i := 0; i < *sends; i++ {
 				beforeWrite := time.Now()
 
-				var err error
-				_, err = client.Write(payload)
+				n, err := client.Write(payload)
 				if err != nil {
 					atomic.AddUint32(&writeErrors, 1)
 					continue
 				}
+				bytesWritten += n
 
 				afterWrite := time.Now()
 				writeElapsed := afterWrite.Sub(beforeWrite)
@@ -111,6 +116,7 @@ func main() {
 					atomic.AddUint32(&readErrors, 1)
 					continue
 				}
+				bytesRead += len(receivedPayload)
 
 				afterRead := time.Now()
 				readElapsed := afterRead.Sub(afterWrite)
@@ -139,9 +145,10 @@ func main() {
 	fmt.Printf("  success:\t%d\n", successCount)
 	fmt.Printf("  total:\t%v\n", totalTime)
 	fmt.Printf("  average:\t%v\n", metrics.avgLatency)
-	fmt.Printf("  throughput:\t%v\n", formatThroughput(float64(*clients**payloadSize**sends*2)/totalTime.Seconds()))
 	fmt.Printf("  maximum:\t%v\n", metrics.maxLatency)
-	fmt.Printf("  minimum:\t%v\n", metrics.minLatency)
+	fmt.Printf("  throughput:\t%v\n", formatThroughput(float64(metrics.bytesRead+metrics.bytesWritten)/totalTime.Seconds()))
+	fmt.Printf("  read:\t\t%v MiB\n", float64(metrics.bytesRead)/1024/1024)
+	fmt.Printf("  written:\t%v MiB\n", float64(metrics.bytesWritten)/1024/1024)
 
 	fmt.Printf("=> ERRORS:\n")
 	fmt.Printf("  connect:\t%d\n", connectionErrors)

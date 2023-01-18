@@ -38,10 +38,15 @@ func main() {
 		),
 	))
 
+	defer func() {
+		log.Info().Msgf("Total read: %f MiB", float64(server.Metrics().TotalRead)/1024/1024)
+		log.Info().Msgf("Total written: %f MiB", float64(server.Metrics().TotalWritten)/1024/1024)
+	}()
+
 	tiny.StartAndBlock(server)
 }
 
-func serve(socket *tinytcp.ConnectedSocket) tinytcp.PacketHandler {
+func serve(socket *tinytcp.Socket) tinytcp.PacketHandler {
 	// client connected
 
 	return func(packet []byte) {
