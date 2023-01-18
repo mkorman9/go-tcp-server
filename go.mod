@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/gookit/config/v2 v2.1.8
-	github.com/mkorman9/tiny v1.0.61
+	github.com/mkorman9/tiny v1.0.62
 	github.com/rs/zerolog v1.28.0
 )
 
