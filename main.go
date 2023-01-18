@@ -2,13 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/gookit/config/v2"
 	"github.com/mkorman9/tiny"
-	"github.com/mkorman9/tiny/tinylog"
 	"github.com/mkorman9/tiny/tinytcp"
 	"github.com/rs/zerolog/log"
-	"os"
 )
 
 var AppVersion = "development"
@@ -17,14 +14,9 @@ func main() {
 	configFilePath := flag.String("config", "./config.yml", "path to config.yml file")
 	flag.Parse()
 
-	if loaded := tiny.LoadConfig(*configFilePath); !loaded {
-		_, _ = fmt.Fprintf(os.Stderr, "Failed to load configuration file\n")
-		os.Exit(1)
-	}
-
-	tinylog.SetupLogger(
-		tinylog.Level(config.String("log.level", "info")),
-	)
+	tiny.Init(&tiny.Config{
+		ConfigFiles: []string{*configFilePath},
+	})
 
 	log.Info().Msgf("Version: %s", AppVersion)
 
